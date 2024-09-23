@@ -20,11 +20,12 @@ from superset.models.dashboard import Dashboard
 from superset.models.slice import Slice
 from superset.connectors.sqla.models import SqlaTable
 from superset.models.embedded_dashboard import EmbeddedDashboard
-from pythonpath.create_assets_utils import load_configs_from_directory
-from pythonpath.delete_assets import delete_assets
 
-from pythonpath.localization import get_translation
-from pythonpath.create_row_level_security import create_rls_filters
+
+from openedx.delete_assets import delete_assets
+from openedx.create_assets_utils import load_configs_from_directory
+from openedx.localization import get_translation
+from openedx.create_row_level_security import create_rls_filters
 
 
 logger = logging.getLogger("create_assets")
