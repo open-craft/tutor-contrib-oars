@@ -18,6 +18,7 @@ import click
 import ruamel.yaml
 from superset.extensions import db
 from superset.models.dashboard import Dashboard
+from superset.jinja_context import get_template_processor
 import clickhouse_connect
 
 
@@ -125,7 +126,7 @@ def get_slice_tables(slice, dbt_tables):
     # only add datasets that are in dashboards, optionally limit to one database
     kind = "virtual" if slice.table.is_virtual else "table"
     if kind == "virtual":  # built on custom sql
-        sql = slice.table.get_rendered_sql()
+        sql = slice.table.get_rendered_sql(get_template_processor(slice.table.database))
         tables = get_tables_from_sql(sql)
     else:
         tables = [dataset_key]
