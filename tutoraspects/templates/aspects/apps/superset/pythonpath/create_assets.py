@@ -22,6 +22,9 @@ from superset.connectors.sqla.models import SqlaTable
 from superset.models.embedded_dashboard import EmbeddedDashboard
 
 
+from superset.tags.models import TagType, get_tag
+from superset.commands.utils import update_tags
+from superset.tags.models import ObjectType
 from openedx.delete_assets import delete_assets
 from openedx.create_assets_utils import load_configs_from_directory
 from openedx.localization import get_translation
@@ -143,7 +146,7 @@ def write_asset_to_file(asset, asset_name, folder, file_name, roles, translated_
     #           access the original dashboards.
     dashboard_roles = asset.pop("_roles", None)
     if dashboard_roles:
-        roles[asset["uuid"]] = [security_manager.find_role("Admin")]
+        roles[asset["uuid"]] = ([security_manager.find_role("Admin")], 'original')
 
     # Clean up old un-localized dashboard
     dashboard_slug = asset.get("slug")
@@ -178,9 +181,9 @@ def generate_translated_asset(asset, asset_name, folder, language, roles, transl
         for role in dashboard_roles:
             translated_dashboard_roles.append(f"{role} - {language}")
 
-        roles[copy["uuid"]] = [
-            security_manager.find_role(role) for role in translated_dashboard_roles
-        ]
+        roles[copy["uuid"]] = ([
+            (security_manager.find_role(role)) for role in translated_dashboard_roles
+        ], language)
 
         generate_translated_dashboard_elements(copy, language)
         generate_translated_dashboard_filters(copy, language)
@@ -268,11 +271,17 @@ def update_dashboard_roles(roles):
     """Update the roles of the dashboards"""
     owners = get_owners()
 
-    for dashboard_uuid, role_ids in roles.items():
+    for dashboard_uuid, (role_ids, language) in roles.items():
         dashboard = db.session.query(Dashboard).filter_by(uuid=dashboard_uuid).one()
         dashboard.roles = role_ids
         if owners:
             dashboard.owners = owners
+        tags = [get_tag(language, db.session, TagType.custom).id]
+        update_tags(ObjectType.dashboard, dashboard.id, dashboard.tags, tags)
+
+        for slice in dashboard.slices:
+            update_tags(ObjectType.chart, slice.id, slice.tags, tags)
+
         db.session.commit()
 
 def get_owners():

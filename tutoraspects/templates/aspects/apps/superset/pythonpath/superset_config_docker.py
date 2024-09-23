@@ -91,7 +91,7 @@ FEATURE_FLAGS = {
     "EMBEDDABLE_CHARTS": True,
     "EMBEDDED_SUPERSET": True,
     "ENABLE_TEMPLATE_PROCESSING": True,
-    "TAGGING_SYSTEM": False,
+    "TAGGING_SYSTEM": True,
 }
 
 # Add this custom template processor which returns the list of courses the current user can access
