@@ -74,7 +74,14 @@
         app.kubernetes.io/name: superset
 
 - name: superset-pythonpath
-  files:{% for file in "aspects/apps/superset/pythonpath"|walk_templates %}
+  files:{% for file in "aspects/apps/superset/pythonpath/"|walk_templates %}
+  - plugins/{{ file }}{% endfor %}
+  options:
+    labels:
+        app.kubernetes.io/name: superset
+
+- name: superset-pythonpath-openedx
+  files:{% for file in "aspects/apps/superset/pythonpath/openedx/"|walk_templates %}
   - plugins/{{ file }}{% endfor %}
   options:
     labels:

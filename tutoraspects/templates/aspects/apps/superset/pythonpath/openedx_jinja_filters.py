@@ -5,7 +5,7 @@ cf https://superset.apache.org/docs/installation/sql-templating/
 """
 
 from superset.extensions import security_manager
-from pythonpath.localization import get_translation, DATASET_STRINGS
+from openedx.localization import get_translation, DATASET_STRINGS
 from superset import security_manager
 import logging
 from flask import g

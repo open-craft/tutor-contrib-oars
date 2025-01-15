@@ -162,6 +162,8 @@ spec:
             name: docker
           - mountPath: /app/pythonpath
             name: pythonpath
+          - mountPath: /app/pythonpath/openedx
+            name: pythonpath-openedx
           - mountPath: /app/security
             name: security
           - mountPath: /app/assets
@@ -175,6 +177,9 @@ spec:
         - name: pythonpath
           configMap:
             name: superset-pythonpath
+        - name: pythonpath-openedx
+          configMap:
+            name: superset-pythonpath-openedx
         - name: security
           configMap:
             name: superset-security
@@ -246,6 +251,8 @@ spec:
               name: docker
             - mountPath: /app/pythonpath
               name: pythonpath
+            - mountPath: /app/pythonpath/openedx
+              name: pythonpath-openedx
             - mountPath: /app/security
               name: security
             - mountPath: /app/assets
@@ -257,6 +264,9 @@ spec:
         - name: pythonpath
           configMap:
             name: superset-pythonpath
+        - name: pythonpath-openedx
+          configMap:
+            name: superset-pythonpath-openedx
         - name: security
           configMap:
             name: superset-security
